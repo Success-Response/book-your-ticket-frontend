@@ -1,9 +1,8 @@
 import Head from 'next/head';
-import styles from 'styles/Home.module.css';
 
 const Dashboard = () => {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Dashboard</title>
         <meta name="description" content="Dashboard" />
