@@ -7,6 +7,10 @@ const validation = () =>
       .string()
       .email('Please provide a valid email address')
       .required('Please provide an email address'),
+    password: yup
+      .string()
+      .min(6, 'The password must be at least 6 characters')
+      .required('Please provide a password'),
   });
 
 const LoginForm = () => {
@@ -43,6 +47,11 @@ const LoginForm = () => {
                 name="password"
                 placeholder="you@email.com"
                 data-testid="password-input"
+              />
+              <ErrorMessage
+                name="password"
+                component="div"
+                data-testid="password-error"
               />
             </div>
             <div>
