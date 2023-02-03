@@ -36,4 +36,60 @@ describe('Login / As a user I want to login to the application so that I can vie
       await expect(page.getByTestId('login-submit')).toHaveText('Login');
     });
   });
+
+  test('FE / A validation message is displayed due to an email address in the wrong format', async ({
+    page,
+  }) => {
+    await step('Given I am on the login page', async () => {
+      await page.goto('/account/login');
+      await expect(page).toHaveTitle('Login');
+      await expect(page.getByTestId('login-page')).toBeVisible();
+    });
+
+    await step(
+      'And I enter an email address in the wrong format i.e. "daveATemailDOTcom"',
+      async () => {
+        await page.getByTestId('email-input').fill('daveATemailDOTcom');
+      }
+    );
+
+    await step('When I move to the password field', async () => {
+      await page.getByTestId('password-input').focus();
+    });
+
+    await step(
+      'Then a email validation error message is displayed under the email input field',
+      async () => {
+        await expect(page.getByTestId('email-error')).toBeVisible();
+      }
+    );
+  });
+
+  test('FE / A validation message is displayed if I move from the email address field to the password field without providing an email', async ({
+    page,
+  }) => {
+    await step('Given I am on the login page', async () => {
+      await page.goto('/account/login');
+      await expect(page).toHaveTitle('Login');
+      await expect(page.getByTestId('login-page')).toBeVisible();
+    });
+
+    await step(
+      'And I select the email address field without entering and information',
+      async () => {
+        await page.getByTestId('email-input').focus();
+      }
+    );
+
+    await step('When I move to the password field', async () => {
+      await page.getByTestId('password-input').focus();
+    });
+
+    await step(
+      'Then a email validation error message is displayed under the email input field',
+      async () => {
+        await expect(page.getByTestId('email-error')).toBeVisible();
+      }
+    );
+  });
 });

@@ -1,5 +1,4 @@
 import Head from 'next/head';
-
 import LoginForm from 'components/forms/auth/LoginForm';
 
 const Login = () => {

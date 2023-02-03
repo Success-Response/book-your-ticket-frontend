@@ -1,8 +1,20 @@
-import { Form, Formik, Field } from 'formik';
+import { Form, Formik, Field, ErrorMessage } from 'formik';
+import * as yup from 'yup';
+
+const validation = () =>
+  yup.object({
+    email: yup
+      .string()
+      .email('Please provide a valid email address')
+      .required('Please provide an email address'),
+  });
 
 const LoginForm = () => {
   return (
-    <Formik initialValues={{ email: '', password: '' }}>
+    <Formik
+      initialValues={{ email: '', password: '' }}
+      validationSchema={validation}
+    >
       {() => (
         <Form>
           <div data-testid="login-form">
@@ -15,6 +27,11 @@ const LoginForm = () => {
                 name="email"
                 placeholder="you@email.com"
                 data-testid="email-input"
+              />
+              <ErrorMessage
+                name="email"
+                component="div"
+                data-testid="email-error"
               />
             </div>
             <div>
