@@ -1,9 +1,6 @@
 # This is a basic workflow that is manually triggered
 
-on:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   e2e-tests:
