@@ -16,10 +16,8 @@ jobs:
         with:
           cmd: build
       - name: install playwright browsers
-        uses: borales/actions-yarn@v4
-        with:
-          cmd: playwright install
-      - name: npm run test:e2e
+        run: npx playwright install --with-deps
+      - name: execute e2e tests
         uses: borales/actions-yarn@v4
         with:
           cmd: test:e2e
