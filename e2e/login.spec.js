@@ -92,4 +92,61 @@ describe('Login / As a user I want to login to the application so that I can vie
       }
     );
   });
+
+  test('FE / A validation message is displayed due to a password less than 6 characters', async ({
+    page,
+  }) => {
+    await step('Given I am on the login page', async () => {
+      await page.goto('/account/login');
+      await expect(page).toHaveTitle('Login');
+      await expect(page.getByTestId('login-page')).toBeVisible();
+    });
+
+    await step('And I enter a password less than 6 characters', async () => {
+      await page.getByTestId('password-input').fill('pass');
+    });
+
+    await step('When I move away from the password field', async () => {
+      await page.getByTestId('email-input').focus();
+    });
+
+    await step(
+      'Then the following validation error message is displayed: The password must be at least 6 characters',
+      async () => {
+        await expect(page.getByTestId('password-error')).toHaveText(
+          'The password must be at least 6 characters'
+        );
+      }
+    );
+  });
+
+  test('FE / A validation message is displayed if I move away from the password field without providing some input', async ({
+    page,
+  }) => {
+    await step('Given I am on the login page', async () => {
+      await page.goto('/account/login');
+      await expect(page).toHaveTitle('Login');
+      await expect(page.getByTestId('login-page')).toBeVisible();
+    });
+
+    await step('And I select the password field', async () => {
+      await page.getByTestId('password-input').focus();
+    });
+
+    await step(
+      'When I move away from the password field without providing some input',
+      async () => {
+        await page.getByTestId('email-input').focus();
+      }
+    );
+
+    await step(
+      'Then the following validation error message is displayed: Please provide a password',
+      async () => {
+        await expect(page.getByTestId('password-error')).toHaveText(
+          'Please provide a password'
+        );
+      }
+    );
+  });
 });
