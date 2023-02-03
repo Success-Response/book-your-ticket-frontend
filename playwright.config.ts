@@ -1,20 +1,21 @@
-import { PlaywrightTestConfig, devices } from '@playwright/test'
-import path from 'path'
+import { devices } from '@playwright/test';
+import path from 'path';
 
 // Use process.env.PORT by default and fallback to port 3000
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 
-// Set webServer.url and use.baseURL with the location of the WebServer respecting the correct set port
-const baseURL = `http://localhost:${PORT}`
+// Set webServer.url and use.baseURL with the location of the WebServer
+// respecting the correct set port
+const baseURL = `http://localhost:${PORT}`;
 
 // Reference: https://playwright.dev/docs/test-configuration
-const config: PlaywrightTestConfig = {
+const config = {
   // Timeout per test
   timeout: 30 * 1000,
   // Test directory
   testDir: path.join(__dirname, 'e2e'),
   // If a test fails, retry it additional 2 times
-  retries: 2,
+  retries: 1,
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: 'test-results/',
 
@@ -32,7 +33,8 @@ const config: PlaywrightTestConfig = {
     // More information: https://playwright.dev/docs/api/class-testoptions#test-options-base-url
     baseURL,
 
-    // Retry a test if its failing with enabled tracing. This allows you to analyse the DOM, console logs, network traffic etc.
+    // Retry a test if its failing with enabled tracing.
+    // This allows you to analyse the DOM, console logs, network traffic etc.
     // More information: https://playwright.dev/docs/trace-viewer
     trace: 'retry-with-trace',
 
@@ -73,5 +75,6 @@ const config: PlaywrightTestConfig = {
       use: devices['iPhone 12'],
     },
   ],
-}
-export default config
+};
+
+export default config;
