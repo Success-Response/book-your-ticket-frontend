@@ -42,5 +42,8 @@
         "paths": ["src"] // tells eslint that all imports resolve to ./src due to baseUrl in js.config.json
       }
     }
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020
   }
 }

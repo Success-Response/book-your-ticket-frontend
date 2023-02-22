@@ -1,5 +1,8 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+import useFetch from 'hooks/useFetch';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const validation = () =>
   yup.object({
@@ -14,10 +17,31 @@ const validation = () =>
   });
 
 const LoginForm = () => {
+  const { state, setData, setError, response } = useFetch();
+  const { error, loading } = state;
+
+  const handleSubmit = async (values) => {
+    if (!loading) {
+      try {
+        setData('POST', '/api/auth/login', { ...values });
+      } catch (e) {
+        setError(e?.message || 'Something went wrong');
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (response && !error) {
+      const router = useRouter();
+      router.push('/');
+    }
+  });
+
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
       validationSchema={validation}
+      onSubmit={handleSubmit}
     >
       {() => (
         <Form>
@@ -56,9 +80,10 @@ const LoginForm = () => {
             </div>
             <div>
               <button type="submit" data-testid="login-submit">
-                Login
+                {loading ? 'Submitting...' : 'Login'}
               </button>
             </div>
+            <div>{error && <div data-testid="login-error">{error}</div>}</div>
           </div>
         </Form>
       )}
