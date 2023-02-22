@@ -4,7 +4,7 @@ import useFetch from '../../src/hooks/useFetch';
 let fetchSpy = null;
 
 beforeEach(() => {
-  fetchSpy = jest.spyOn(window, 'fetch');
+  fetchSpy = jest.spyOn(global, 'fetch');
 });
 
 const renderAndInitialAssertions = () => {
@@ -21,18 +21,27 @@ const renderAndInitialAssertions = () => {
   return result;
 };
 
-describe('useFetch', () => {
+describe('useFetch: a React hook to handle API requests using fetch', () => {
   it('should return a state object and setData function', async () => {
     // render and initial assertions
     renderAndInitialAssertions();
   });
 
   it('should be able to set the state values from outside the hook', async () => {
+    // mock fetch response
+    fetchSpy.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: async () => ({ message: 'success' }),
+      })
+    );
+
     // render and initial assertions
     const result = renderAndInitialAssertions();
 
     // actions
-    act(() => {
+    await act(() => {
       result.current.setData('POST', '/login', {
         email: 'kaew@sr.com',
         password: '87654321',
@@ -46,7 +55,7 @@ describe('useFetch', () => {
       email: 'kaew@sr.com',
       password: '87654321',
     });
-    expect(window.fetch).toHaveBeenNthCalledWith(1, '/login', {
+    expect(fetchSpy).toHaveBeenNthCalledWith(1, '/login', {
       body: { email: 'kaew@sr.com', password: '87654321' },
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
@@ -64,7 +73,7 @@ describe('useFetch', () => {
 
     // final assertions
     expect(result.current.state.error).toBe('url must be a string');
-    expect(window.fetch).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it('return an error if an incorrect method option is provided', async () => {
@@ -83,7 +92,7 @@ describe('useFetch', () => {
     expect(result.current.state.error).toBe(
       'method must be one of the following string options: GET, POST, DELETE'
     );
-    expect(window.fetch).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it('return an error if body data is passed with a GET method', async () => {
@@ -101,16 +110,16 @@ describe('useFetch', () => {
     expect(result.current.state.error).toBe(
       'GET requests do not require body data'
     );
-    expect(window.fetch).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  it('return an success response if fetch request is successful', async () => {
+  it('return a success message if fetch request is successful', async () => {
     // mock fetch response
     fetchSpy.mockImplementation(() =>
       Promise.resolve({
         ok: true,
         status: 200,
-        json: async () => ({ data: false, message: 'success' }),
+        json: async () => ({ message: 'success' }),
       })
     );
 
@@ -126,14 +135,46 @@ describe('useFetch', () => {
     });
 
     // final assertions
-    expect(result.current.response).toStrictEqual({
-      data: false,
-      message: 'success',
-    });
-    expect(window.fetch).toHaveBeenNthCalledWith(1, '/login', {
+    expect(result.current.response).toStrictEqual({ message: 'success' });
+    expect(fetchSpy).toHaveBeenNthCalledWith(1, '/login', {
       body: { email: 'johno@sr.com', password: '12345678' },
       headers: { 'Content-Type': 'application/json' },
       method: 'POST',
+    });
+  });
+
+  it('return the fallback message if a 404 returns HTML content', async () => {
+    const htmlContent = `<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+      <html><head>
+      <title>404 Not Found</title>
+      </head><body>
+      <h1>Not Found</h1>
+      <p>The requested URL /info was not found on this server.</p>`;
+
+    // mock fetch response
+    fetchSpy.mockImplementation(() =>
+      Promise.resolve({
+        ok: true,
+        status: 404,
+        json: async () => ({
+          message: htmlContent,
+        }),
+      })
+    );
+
+    // render and initial assertions
+    const result = renderAndInitialAssertions();
+
+    // actions
+    await act(async () => {
+      result.current.setData('GET', '/neighbourhoods');
+    });
+
+    // final assertions
+    expect(result.current.state.error).toBe('Something went wrong');
+    expect(fetchSpy).toHaveBeenNthCalledWith(1, '/neighbourhoods', {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'GET',
     });
   });
 });

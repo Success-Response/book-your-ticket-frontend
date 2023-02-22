@@ -68,26 +68,21 @@ const useFetch = (initialState) => {
       setResponse((r) => ({ ...r, ...resBody }));
     } catch (e) {
       let fallback = false;
-      if (e?.res?.status === 404 && e?.message?.includes('DOCTYPE')) {
+      if (e?.resBody?.message?.includes('<!DOCTYPE')) {
         fallback = 'Something went wrong';
       }
-      console.log('e.message', e.message);
-      setState((s) => ({
-        ...s,
-        error: fallback || e?.resBody?.message || e?.message,
-        loading: false,
-      }));
+      setError(fallback || e?.resBody?.message || e?.message);
     }
   };
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    // ref.current ===  true on first render
     if (!ref.current) {
       sendRequest();
     }
-    // set to false so that subsequent renders will trigger sendRequest
+    /* ref.current ===  true on first render, set it false here 
+    so that subsequent renders will trigger the above sendRequest() */
     ref.current = false;
 
     return () => {
