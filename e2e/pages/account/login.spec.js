@@ -1,8 +1,14 @@
 import { test, expect } from '@playwright/test';
+import { Common } from '../../support/common';
 
-const { step, describe } = test;
+const { step, describe, beforeEach } = test;
+let common = false;
 
 describe('Login / As a user I want to login to the application so that I can view the main dashboard', () => {
+  beforeEach(({ page }) => {
+    common = new Common(page);
+  });
+
   test('FE / The login feature contains the correct components', async ({
     page,
   }) => {
@@ -148,5 +154,35 @@ describe('Login / As a user I want to login to the application so that I can vie
         );
       }
     );
+  });
+
+  test('FE / As an unregistered user I am presented with an error message if I try to login', async ({
+    page,
+  }) => {
+    common.stubApiResponse('**/api/auth/login', 404, {
+      message: 'Login failed, please try again',
+      id: 12345,
+    });
+
+    await step('Given I am on the login page', async () => {
+      await page.goto('/account/login');
+      await expect(page).toHaveTitle('Login');
+      await expect(page.getByTestId('login-page')).toBeVisible();
+    });
+
+    await step('And I enter my details without being registered', async () => {
+      await page.getByTestId('email-input').fill('unregistered@fake-mail.com');
+      await page.getByTestId('password-input').fill('123456');
+    });
+
+    await step('When I submit the form', async () => {
+      await page.getByTestId('login-submit').click();
+    });
+
+    await step('Then I should see an error message', async () => {
+      await expect(page.getByTestId('login-error')).toHaveText(
+        'Login failed, please try again'
+      );
+    });
   });
 });
