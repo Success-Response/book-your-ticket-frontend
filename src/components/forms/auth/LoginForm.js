@@ -2,7 +2,8 @@ import { Form, Formik, Field, ErrorMessage } from 'formik';
 import useFetch from 'hooks/useFetch';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import errorHandler from 'lib/errorHandler';
+// FIXME
+// import errorHandler from 'lib/errorHandler';
 import { loginFormValidation } from 'lib/validationSchemas';
 
 const LoginForm = () => {
@@ -71,7 +72,9 @@ const LoginForm = () => {
             <div>
               {error && (
                 <div data-testid="login-error">
-                  {errorHandler(error, 'logging in')}
+                  {/* FIXME */}
+                  {/* {errorHandler(error, 'logging in')} */}
+                  {error?.statusText}
                 </div>
               )}
             </div>

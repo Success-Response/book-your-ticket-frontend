@@ -73,12 +73,33 @@ const useFetch = () => {
       }));
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error({ e });
+      console.error({ e }, e?.name);
+
+      // FIXME - if this works we might need to refactor
+      let error = {};
+
+      if (e?.name) {
+        error = { name: e.name, message: e.message };
+      }
+
+      if (e?.status) {
+        switch (e.status) {
+          case 404:
+            error = { status: e.status, statusText: e.statusText };
+            break;
+          case 401:
+            error = { status: e.status, statusText: 'Something went wrong' };
+            break;
+          default:
+            break;
+        }
+      }
+
       setResponse((prev) => ({
         ...prev,
         ...initialResponse,
-        error: e,
         loading: false,
+        error,
       }));
     }
   };
