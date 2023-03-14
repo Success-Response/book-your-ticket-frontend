@@ -75,6 +75,8 @@ const config = {
       use: devices['iPhone 12'],
     },
   ],
+  // FIXME - tidy up/remove workers after CI issue is fixed
+  workers: 1,
 };
 
 export default config;

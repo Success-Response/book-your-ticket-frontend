@@ -30,6 +30,11 @@ const useFetch = () => {
       path,
       body: JSON.stringify(body),
     }));
+
+    setResponse((prev) => ({
+      ...prev,
+      loading: true,
+    }));
   };
 
   const sendRequest = async () => {
@@ -69,14 +74,19 @@ const useFetch = () => {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error({ e });
-      setResponse({ ...initialResponse, error: e });
+      setResponse((prev) => ({
+        ...prev,
+        ...initialResponse,
+        error: e,
+        loading: false,
+      }));
     }
   };
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    if (!ref.current) {
+    if (!ref.current && response.loading && request.path) {
       sendRequest();
     }
     /* ref.current ===  true on first render, set it false here 
@@ -87,7 +97,7 @@ const useFetch = () => {
       // abort request if component is unmounted
       abortController.abort();
     };
-  }, [request.path]);
+  }, [request.path, response.loading]);
 
   return { setRequestParams, request, response };
 };

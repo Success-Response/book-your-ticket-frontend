@@ -94,10 +94,15 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
   });
 
   it('return a success message in body if fetch request is successful', async () => {
+    const apiRoute = '/login';
+    const url = TEST_API_URL + apiRoute;
+    const body = { email: 'johno@sr.com', password: '12345678' };
+
     // mock fetch response
     const expected = new Response(JSON.stringify({ message: 'success' }), {
       status: 200,
       statusText: 'OK',
+      url,
     });
     fetchSpy.mockImplementation(() => expected);
 
@@ -105,9 +110,8 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
     const result = renderAndInitialAssertions();
 
     // actions
-    const body = { email: 'johno@sr.com', password: '12345678' };
     await act(async () => {
-      result.current.setRequestParams('POST', '/login', body);
+      result.current.setRequestParams('POST', apiRoute, body);
     });
 
     // final assertions
@@ -118,7 +122,7 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
         message: false,
         data: { message: 'success' },
       });
-      expect(fetchSpy).toHaveBeenNthCalledWith(1, `${TEST_API_URL}/login`, {
+      expect(fetchSpy).toHaveBeenNthCalledWith(1, url, {
         headers: { 'Content-Type': 'application/json' },
         method: 'POST',
         body: JSON.stringify(body),
@@ -127,10 +131,14 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
   });
 
   it('returns the 404 error response if it occurs', async () => {
+    const apiRoute = '/test';
+    const url = TEST_API_URL + apiRoute;
+
     // mock fetch response
     const expected = new Response(null, {
       status: 404,
       statusText: 'Not Found',
+      url,
     });
     fetchSpy.mockImplementation(() => Promise.resolve(expected));
 
@@ -139,7 +147,7 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
 
     // actions
     await act(async () => {
-      result.current.setRequestParams('GET', '/test');
+      result.current.setRequestParams('GET', apiRoute);
     });
 
     // final assertions
@@ -148,7 +156,7 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
       expect(result.current.response.loading).toBe(false);
       expect(status).toBe(404);
       expect(statusText).toBe('Not Found');
-      expect(fetchSpy).toHaveBeenNthCalledWith(1, `${TEST_API_URL}/test`, {
+      expect(fetchSpy).toHaveBeenNthCalledWith(1, url, {
         headers: { 'Content-Type': 'application/json' },
         method: 'GET',
       });

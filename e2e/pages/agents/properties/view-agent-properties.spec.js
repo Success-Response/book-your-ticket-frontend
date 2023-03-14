@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
+// FIXME - tidy up/remove commented code
 // import { Common } from '../../../support/common';
 
 // const { step, describe, beforeEach, afterEach } = test;
 const { step, describe, afterEach } = test;
 // let common = false;
 
-describe('<AgentProperties />', () => {
+describe('AgentProperties page', () => {
   // beforeEach(({ page }) => {
   //   common = new Common(page);
   // });
