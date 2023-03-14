@@ -73,7 +73,7 @@ const useFetch = () => {
       }));
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.error({ e }, e?.name);
+      console.error({ e });
 
       // FIXME - if this works we might need to refactor
       let error = {};
@@ -83,6 +83,11 @@ const useFetch = () => {
       }
 
       if (e?.status) {
+        // FIXME
+        console.log('e.status: ', e.status)
+        console.log('e.statusText: ', e.statusText)
+        console.log('e.url: ', e.url)
+        console.log('e.type: ', e.type)
         switch (e.status) {
           case 404:
             error = { status: e.status, statusText: e.statusText };
