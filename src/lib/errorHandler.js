@@ -1,10 +1,14 @@
 // eslint-disable-next-line consistent-return
 const errorHandler = (e, message = false) => {
-  if (e instanceof TypeError) {
+  // FIXME
+  // if (e instanceof TypeError) {
+  if (e?.name === 'TypeError') {
     return 'Something went wrong';
   }
 
-  if (e instanceof Response) {
+  // FIXME
+  // if (e instanceof Response) {
+  if (e?.status) {
     switch (e.status) {
       case 404:
         return `${message} not found`;

@@ -178,7 +178,7 @@ describe('Login / As a user I want to login to the application so that I can vie
 
     await step('Then I should see an error message', async () => {
       await expect(page.getByTestId('login-error')).toHaveText(
-        'Something went wrong while logging in'
+        'Something went wrong'
       );
     });
   });
