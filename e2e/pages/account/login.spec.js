@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 // import { Common } from '../../support/common';
 
 // const { step, describe, beforeEach } = test;
-const { step, describe } = test;
+const { step, describe, afterEach } = test;
 // let common = false;
 
 describe('Login / As a user I want to login to the application so that I can view the main dashboard', () => {
