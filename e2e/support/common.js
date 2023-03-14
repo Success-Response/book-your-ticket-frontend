@@ -4,7 +4,7 @@ exports.Common = class Common {
     this.page = page;
   }
 
-  async stubApiResponse(path, status, body) {
+  async stubApiResponse(path, status, body = false) {
     await this.page.route(path, (route) => {
       route.fulfill({
         status,

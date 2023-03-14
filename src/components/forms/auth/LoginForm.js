@@ -1,37 +1,22 @@
 import { Form, Formik, Field, ErrorMessage } from 'formik';
-import * as yup from 'yup';
 import useFetch from 'hooks/useFetch';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-
-const validation = () =>
-  yup.object({
-    email: yup
-      .string()
-      .email('Please provide a valid email address')
-      .required('Please provide an email address'),
-    password: yup
-      .string()
-      .min(6, 'The password must be at least 6 characters')
-      .required('Please provide a password'),
-  });
+import errorHandler from 'lib/errorHandler';
+import { loginFormValidation } from 'lib/validationSchemas';
 
 const LoginForm = () => {
-  const { state, setData, setError, response } = useFetch();
-  const { error, loading } = state;
+  const { setRequestParams, response } = useFetch();
+  const { loading, error, data } = response;
 
   const handleSubmit = async (values) => {
     if (!loading) {
-      try {
-        setData('POST', '/api/auth/login', { ...values });
-      } catch (e) {
-        setError(e?.message || 'Something went wrong');
-      }
+      setRequestParams('POST', '/auth/login', { ...values });
     }
   };
 
   useEffect(() => {
-    if (response && !error) {
+    if (data && !error) {
       const router = useRouter();
       router.push('/');
     }
@@ -40,7 +25,7 @@ const LoginForm = () => {
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      validationSchema={validation}
+      validationSchema={loginFormValidation}
       onSubmit={handleSubmit}
     >
       {() => (
@@ -83,7 +68,13 @@ const LoginForm = () => {
                 {loading ? 'Submitting...' : 'Login'}
               </button>
             </div>
-            <div>{error && <div data-testid="login-error">{error}</div>}</div>
+            <div>
+              {error && (
+                <div data-testid="login-error">
+                  {errorHandler(error, 'logging in')}
+                </div>
+              )}
+            </div>
           </div>
         </Form>
       )}

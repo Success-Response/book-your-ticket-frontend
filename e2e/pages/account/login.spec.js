@@ -156,13 +156,10 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / As an unregistered user I am presented with an error message if I try to login', async ({
+  test('FE / As an unregistered user I am presented with an error message if my login attempt fails', async ({
     page,
   }) => {
-    common.stubApiResponse('**/api/auth/login', 404, {
-      message: 'Login failed, please try again',
-      id: 12345,
-    });
+    common.stubApiResponse('**/dev/auth/login', 401);
 
     await step('Given I am on the login page', async () => {
       await page.goto('/account/login');
@@ -181,7 +178,7 @@ describe('Login / As a user I want to login to the application so that I can vie
 
     await step('Then I should see an error message', async () => {
       await expect(page.getByTestId('login-error')).toHaveText(
-        'Login failed, please try again'
+        'Something went wrong while logging in'
       );
     });
   });
