@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
 
-const { step, describe, afterEach } = test;
+const { step, describe, afterEach, beforeEach } = test;
 
 describe('AgentProperties page', () => {
+  // FIXME
+  beforeEach(({ page }) => {
+    page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
+  });
+
   afterEach(async ({ page }) => {
     await page.close();
   });
