@@ -2,12 +2,12 @@ import { test, expect } from '@playwright/test';
 
 const { step, describe, afterEach } = test;
 
-describe('Login / As a user I want to login to the application so that I can view the main dashboard', () => {
+describe('Login page', () => {
   afterEach(async ({ page }) => {
     await page.close();
   });
 
-  test('FE / The login feature contains the correct components', async ({
+  test('The login feature contains the correct components', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
@@ -41,7 +41,7 @@ describe('Login / As a user I want to login to the application so that I can vie
     });
   });
 
-  test('FE / A validation message is displayed due to an email address in the wrong format', async ({
+  test('A validation message is displayed due to an email address in the wrong format', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
@@ -69,7 +69,7 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / A validation message is displayed if I move from the email address field to the password field without providing an email', async ({
+  test('A validation message is displayed if I move from the email address field to the password field without providing an email', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
@@ -97,7 +97,7 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / A validation message is displayed due to a password less than 6 characters', async ({
+  test('A validation message is displayed due to a password less than 6 characters', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
@@ -124,7 +124,7 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / A validation message is displayed if I move away from the password field without providing some input', async ({
+  test('A validation message is displayed if I move away from the password field without providing some input', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
@@ -154,10 +154,12 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / As an unregistered user I am presented with an error message if my login attempt fails', async ({
+  test('As an unregistered user I am presented with an error message if my login attempt fails', async ({
     page,
   }) => {
-    await page.route('**/dev/auth/login', (route) => {
+    const apiRoute = '**/dev/auth/login';
+
+    await page.route(apiRoute, (route) => {
       route.fulfill({ status: 401 });
     });
 
@@ -181,5 +183,7 @@ describe('Login / As a user I want to login to the application so that I can vie
         'Something went wrong'
       );
     });
+
+    await page.unroute(apiRoute);
   });
 });

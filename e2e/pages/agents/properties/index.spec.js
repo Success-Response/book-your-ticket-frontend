@@ -10,7 +10,9 @@ describe('AgentProperties page', () => {
   test('I want see a suitable error message when I visit the agent properties page and the application fails to get the properties', async ({
     page,
   }) => {
-    await page.route('**/dev/agents/1/properties', (route) => {
+    const apiRoute = '**/dev/agents/1/properties';
+
+    await page.route(apiRoute, (route) => {
       route.fulfill({
         status: 404,
         body: JSON.stringify({ message: 'Not found' }),
@@ -33,5 +35,7 @@ describe('AgentProperties page', () => {
           'Not Found'
         )
     );
+
+    await page.unroute(apiRoute);
   });
 });
