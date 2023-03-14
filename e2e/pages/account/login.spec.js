@@ -1,12 +1,19 @@
 import { test, expect } from '@playwright/test';
-import { Common } from '../../support/common';
+// import { Common } from '../../support/common';
 
-const { step, describe, beforeEach } = test;
-let common = false;
+// const { step, describe, beforeEach } = test;
+const { step, describe } = test;
+// let common = false;
 
 describe('Login / As a user I want to login to the application so that I can view the main dashboard', () => {
-  beforeEach(({ page }) => {
-    common = new Common(page);
+  // beforeEach(({ page }) => {
+  //   common = new Common(page);
+  // });
+
+  afterEach(async ({ page }) => {
+    // common.unMockApiResponse();
+    await page.close();
+    // common = null;
   });
 
   test('FE / The login feature contains the correct components', async ({
@@ -159,7 +166,11 @@ describe('Login / As a user I want to login to the application so that I can vie
   test('FE / As an unregistered user I am presented with an error message if my login attempt fails', async ({
     page,
   }) => {
-    common.stubApiResponse('**/dev/auth/login', 401);
+    // common.stubApiResponse('**/dev/auth/login', 401);
+
+    await page.route('**/dev/auth/login', (route) => {
+      route.fulfill({ status: 401 });
+    });
 
     await step('Given I am on the login page', async () => {
       await page.goto('/account/login');

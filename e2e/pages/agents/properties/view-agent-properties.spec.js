@@ -1,19 +1,33 @@
 import { test, expect } from '@playwright/test';
-import { Common } from '../../../support/common';
+// import { Common } from '../../../support/common';
 
-const { step, describe, beforeEach } = test;
-let common = false;
+// const { step, describe, beforeEach, afterEach } = test;
+const { step, describe, afterEach } = test;
+// let common = false;
 
 describe('<AgentProperties />', () => {
-  beforeEach(({ page }) => {
-    common = new Common(page);
+  // beforeEach(({ page }) => {
+  //   common = new Common(page);
+  // });
+
+  afterEach(async ({ page }) => {
+    // common.unMockApiResponse();
+    await page.close();
+    // common = null;
   });
 
   test('I want see a suitable error message when I visit the agent properties page and the application fails to get the properties', async ({
     page,
   }) => {
-    common.stubApiResponse('**/dev/agents/1/properties', 404, {
-      message: 'Not found',
+    // common.stubApiResponse('**/dev/agents/1/properties', 404, {
+    //   message: 'Not found',
+    // });
+
+    await page.route('**/dev/agents/1/properties', (route) => {
+      route.fulfill({
+        status: 404,
+        body: JSON.stringify({ message: 'Not found' }),
+      });
     });
 
     await step(
