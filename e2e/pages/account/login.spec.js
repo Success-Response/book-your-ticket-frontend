@@ -1,19 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-// FIXME
-// const { step, describe, afterEach, beforeEach } = test;
 const { step, describe } = test;
 
 describe('Login page', () => {
-  // FIXME
-  // beforeEach(({ page }) => {
-  //   page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
-  // });
-
-  // afterEach(async ({ page }) => {
-  //   await page.close();
-  // });
-
   test('The login feature contains the correct components', async ({
     page,
   }) => {
