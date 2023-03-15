@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "next start",
     "test:e2e": "playwright test",
+    "test:e2e:debug": "playwright test --debug",
     "test": "jest"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "babel-eslint": "^10.1.0",
+    "dotenv": "^16.0.3",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "^8.6.0",

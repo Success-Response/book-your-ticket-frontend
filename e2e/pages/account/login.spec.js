@@ -1,21 +1,22 @@
 import { test, expect } from '@playwright/test';
-import { Common } from '../../support/common';
 
 const { step, describe, beforeEach } = test;
-let common = false;
 
-describe('Login / As a user I want to login to the application so that I can view the main dashboard', () => {
-  beforeEach(({ page }) => {
-    common = new Common(page);
-  });
+beforeEach(async ({ page }) => {
+  await page.goto('/account/login');
+});
 
-  test('FE / The login feature contains the correct components', async ({
+const assertLoginPage = async (page) => {
+  await expect(page).toHaveTitle('Login');
+  await expect(page.getByTestId('login-page')).toBeVisible();
+};
+
+describe('Login page', () => {
+  test('The login feature contains the correct components', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step(
@@ -43,13 +44,11 @@ describe('Login / As a user I want to login to the application so that I can vie
     });
   });
 
-  test('FE / A validation message is displayed due to an email address in the wrong format', async ({
+  test('A validation message is displayed due to an email address in the wrong format', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step(
@@ -71,13 +70,11 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / A validation message is displayed if I move from the email address field to the password field without providing an email', async ({
+  test('A validation message is displayed if I move from the email address field to the password field without providing an email', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step(
@@ -99,13 +96,11 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / A validation message is displayed due to a password less than 6 characters', async ({
+  test('A validation message is displayed due to a password less than 6 characters', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step('And I enter a password less than 6 characters', async () => {
@@ -126,13 +121,11 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / A validation message is displayed if I move away from the password field without providing some input', async ({
+  test('A validation message is displayed if I move away from the password field without providing some input', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step('And I select the password field', async () => {
@@ -156,18 +149,17 @@ describe('Login / As a user I want to login to the application so that I can vie
     );
   });
 
-  test('FE / As an unregistered user I am presented with an error message if I try to login', async ({
+  test('As an unregistered user I am presented with an error message if my login attempt fails', async ({
     page,
   }) => {
-    common.stubApiResponse('**/api/auth/login', 404, {
-      message: 'Login failed, please try again',
-      id: 12345,
+    const apiRoute = '**/api/auth/login';
+
+    await page.route(apiRoute, (route) => {
+      route.fulfill({ status: 401 });
     });
 
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step('And I enter my details without being registered', async () => {
@@ -181,8 +173,10 @@ describe('Login / As a user I want to login to the application so that I can vie
 
     await step('Then I should see an error message', async () => {
       await expect(page.getByTestId('login-error')).toHaveText(
-        'Login failed, please try again'
+        'You are unable to access this resource'
       );
     });
+
+    await page.unroute(apiRoute);
   });
 });
