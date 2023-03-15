@@ -13,7 +13,7 @@ module.exports = defineConfig({
   outputDir: 'test-results/',
   // Run a local dev server before starting the tests
   webServer: {
-    command: 'npm run dev',
+    command: 'yarn run dev',
     port: 3000,
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
