@@ -2,8 +2,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { fetchParamsValidation } from '../lib/validationSchemas';
 
-const API_URL =
-  process?.env?.TEST_API_URL || process?.env?.NEXT_PUBLIC_API_URL || null;
+// FIXME
+// const API_URL =
+//   process?.env?.LOCAL_API_URL || process?.env?.NEXT_PUBLIC_API_URL || null;
+
+// console.log({ API_URL });
+// console.log(process.env);
 
 const initialResponse = {
   loading: false,
@@ -57,7 +61,7 @@ const useFetch = () => {
       if (method === 'GET') delete payload.body; // exclude body data from GET requests
 
       // make the fetch request
-      const fetchReponse = await fetch(API_URL + request.path, payload);
+      const fetchReponse = await fetch(request.path, payload);
 
       // if the request fails, throw the response to the catch block
       if (fetchReponse.status !== 200) throw fetchReponse;
@@ -75,36 +79,36 @@ const useFetch = () => {
       // eslint-disable-next-line no-console
       console.error({ e });
 
-      // FIXME - if this works we might need to refactor
-      let error = {};
+      // // FIXME - if this works we might need to refactor
+      // let error = {};
 
-      if (e?.name) {
-        error = { name: e.name, message: e.message };
-      }
+      // if (e?.name) {
+      //   error = { name: e.name, message: e.message };
+      // }
 
-      if (e?.status) {
-        // FIXME
-        console.log('e.status: ', e.status);
-        console.log('e.statusText: ', e.statusText);
-        console.log('e.url: ', e.url);
-        console.log('e.type: ', e.type);
-        switch (e.status) {
-          case 404:
-            error = { status: e.status, statusText: e.statusText };
-            break;
-          case 401:
-            error = { status: e.status, statusText: 'Something went wrong' };
-            break;
-          default:
-            break;
-        }
-      }
+      // if (e?.status) {
+      //   // FIXME
+      //   console.log('e.status: ', e.status);
+      //   console.log('e.statusText: ', e.statusText);
+      //   console.log('e.url: ', e.url);
+      //   console.log('e.type: ', e.type);
+      //   switch (e.status) {
+      //     case 404:
+      //       error = { status: e.status, statusText: e.statusText };
+      //       break;
+      //     case 401:
+      //       error = { status: e.status, statusText: 'Something went wrong' };
+      //       break;
+      //     default:
+      //       break;
+      //   }
+      // }
 
       setResponse((prev) => ({
         ...prev,
         ...initialResponse,
         loading: false,
-        error,
+        error: e,
       }));
     }
   };

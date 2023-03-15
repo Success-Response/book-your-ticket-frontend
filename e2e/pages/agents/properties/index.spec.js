@@ -1,26 +1,27 @@
 import { test, expect } from '@playwright/test';
-
-const { step, describe, afterEach, beforeEach } = test;
+// FIXME
+// const { step, describe, afterEach, beforeEach } = test;
+const { step, describe } = test;
 
 describe('AgentProperties page', () => {
   // FIXME
-  beforeEach(({ page }) => {
-    page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
-  });
+  // beforeEach(({ page }) => {
+  //   page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
+  // });
 
-  afterEach(async ({ page }) => {
-    await page.close();
-  });
+  // afterEach(async ({ page }) => {
+  //   await page.close();
+  // });
 
   test('I want see a suitable error message when I visit the agent properties page and the application fails to get the properties', async ({
     page,
   }) => {
-    const apiRoute = '**/dev/agents/1/properties';
+    const apiRoute = '**/api/agents/1/properties';
 
     await page.route(apiRoute, (route) => {
       route.fulfill({
         status: 404,
-        body: JSON.stringify({ message: 'Not found' }),
+        body: JSON.stringify({ message: 'Not Found' }),
       });
     });
 
@@ -37,7 +38,7 @@ describe('AgentProperties page', () => {
       'Then I see a suitable error message if the backend request fails',
       async () =>
         expect(page.getByTestId('agent-properties-error')).toHaveText(
-          'Not Found'
+          'Properties not found'
         )
     );
 

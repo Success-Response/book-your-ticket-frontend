@@ -2,8 +2,7 @@ import Head from 'next/head';
 import { useEffect } from 'react';
 import useFetch from 'hooks/useFetch';
 import { useRouter } from 'next/router';
-// FIXME
-// import errorHandler from 'lib/errorHandler';
+import errorHandler from 'lib/errorHandler';
 
 const AgentProperties = () => {
   const { setRequestParams, response } = useFetch();
@@ -14,7 +13,7 @@ const AgentProperties = () => {
 
   useEffect(() => {
     if (agentId) {
-      setRequestParams('GET', `/agents/${agentId}/properties`);
+      setRequestParams('GET', `/api/agents/${agentId}/properties`);
     }
   }, [agentId]);
 
@@ -32,8 +31,9 @@ const AgentProperties = () => {
             {error ? (
               <p data-testid="agent-properties-error">
                 {/* FIXME */}
-                {/* {errorHandler(error, 'Properties')} */}
-                {error?.statusText}
+                {errorHandler(error, 'Properties')}
+                {/* {error?.statusText} */}
+                {/* {error} */}
               </p>
             ) : (
               <div>

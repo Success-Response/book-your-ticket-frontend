@@ -1,16 +1,18 @@
 import { test, expect } from '@playwright/test';
 
-const { step, describe, afterEach, beforeEach } = test;
+// FIXME
+// const { step, describe, afterEach, beforeEach } = test;
+const { step, describe } = test;
 
 describe('Login page', () => {
   // FIXME
-  beforeEach(({ page }) => {
-    page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
-  });
+  // beforeEach(({ page }) => {
+  //   page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
+  // });
 
-  afterEach(async ({ page }) => {
-    await page.close();
-  });
+  // afterEach(async ({ page }) => {
+  //   await page.close();
+  // });
 
   test('The login feature contains the correct components', async ({
     page,
@@ -162,7 +164,7 @@ describe('Login page', () => {
   test('As an unregistered user I am presented with an error message if my login attempt fails', async ({
     page,
   }) => {
-    const apiRoute = '**/dev/auth/login';
+    const apiRoute = '**/api/auth/login';
 
     await page.route(apiRoute, (route) => {
       route.fulfill({ status: 401 });

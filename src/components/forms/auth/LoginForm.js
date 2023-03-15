@@ -3,7 +3,7 @@ import useFetch from 'hooks/useFetch';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 // FIXME
-// import errorHandler from 'lib/errorHandler';
+import errorHandler from 'lib/errorHandler';
 import { loginFormValidation } from 'lib/validationSchemas';
 
 const LoginForm = () => {
@@ -12,7 +12,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (values) => {
     if (!loading) {
-      setRequestParams('POST', '/auth/login', { ...values });
+      setRequestParams('POST', '/api/auth/login', { ...values });
     }
   };
 
@@ -73,8 +73,9 @@ const LoginForm = () => {
               {error && (
                 <div data-testid="login-error">
                   {/* FIXME */}
-                  {/* {errorHandler(error, 'logging in')} */}
-                  {error?.statusText}
+                  {errorHandler(error)}
+                  {/* {error?.statusText}
+                  {error} */}
                 </div>
               )}
             </div>

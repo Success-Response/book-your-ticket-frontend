@@ -1,17 +1,17 @@
+const defaultMessage = {
+  notFound: 'Resource not found',
+};
+
 // eslint-disable-next-line consistent-return
 const errorHandler = (e, message = false) => {
-  // FIXME
-  // if (e instanceof TypeError) {
-  if (e?.name === 'TypeError') {
+  if (e instanceof TypeError) {
     return 'Something went wrong';
   }
 
-  // FIXME
-  // if (e instanceof Response) {
-  if (e?.status) {
+  if (e instanceof Response) {
     switch (e.status) {
       case 404:
-        return `${message} not found`;
+        return message ? `${message} not found` : defaultMessage.notFound;
       case 401:
         return 'Something went wrong';
       default:
