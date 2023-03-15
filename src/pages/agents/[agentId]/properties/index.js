@@ -6,7 +6,7 @@ import errorHandler from 'lib/errorHandler';
 
 const AgentProperties = () => {
   const { setRequestParams, response } = useFetch();
-  const { loading, error, message, data } = response;
+  const { loading, error, data } = response;
   const {
     query: { agentId },
   } = useRouter();
@@ -25,24 +25,24 @@ const AgentProperties = () => {
       </Head>
       <div data-testid="agent-properties-page">
         {loading ? (
-          <div>Loading</div>
+          <div data-testid="loading">Loading</div>
         ) : (
           <div>
             {error ? (
-              <p data-testid="agent-properties-error">
-                {errorHandler(error, 'Properties')}
-              </p>
+              <p data-testid="error">{errorHandler(error, 'Properties')}</p>
             ) : (
-              <div>
-                <h2>{message}</h2>
-                {data?.agentProperties?.map((p) => (
-                  <div key={p.id}>
-                    <div>Agent ID: {p.agentId}</div>
-                    <div>Beds: {p.beds}</div>
-                    <div>Bathrooms: {p.bathrooms}</div>
-                    <div>Deposit: {p.deposit}</div>
-                  </div>
-                ))}
+              <div data-testid="success">
+                <h2>{data.message}</h2>
+                <div>
+                  {data?.agentProperties?.map((p) => (
+                    <div key={p.id} className="agent-property">
+                      <div>Agent ID: {p.agentId}</div>
+                      <div>Beds: {p.beds}</div>
+                      <div>Bathrooms: {p.bathrooms}</div>
+                      <div>Deposit: {p.deposit}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
