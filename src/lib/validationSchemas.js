@@ -50,4 +50,3 @@ const loginFormValidation = () =>
   });
 
 export { fetchParamsValidation, loginFormValidation };
-// export { LoginFormValidation };

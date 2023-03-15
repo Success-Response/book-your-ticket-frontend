@@ -20,7 +20,7 @@ const LoginForm = () => {
       const router = useRouter();
       router.push('/');
     }
-  });
+  }, [data, error]);
 
   return (
     <Formik
@@ -54,7 +54,7 @@ const LoginForm = () => {
               <Field
                 type="password"
                 name="password"
-                placeholder="you@email.com"
+                placeholder="your password"
                 data-testid="password-input"
               />
               <ErrorMessage

@@ -5,6 +5,8 @@ require('dotenv').config({
   path: './.env.test',
 });
 
+console.log(process.env);
+
 module.exports = defineConfig({
   // timeout per test
   timeout: 30 * 1000,
