@@ -1,18 +1,8 @@
 import { test, expect } from '@playwright/test';
-// FIXME
-// const { step, describe, afterEach, beforeEach } = test;
+
 const { step, describe } = test;
 
 describe('AgentProperties page', () => {
-  // FIXME
-  // beforeEach(({ page }) => {
-  //   page.on('console', (msg) => console.log('LOG FROM INSIDE PAGE: ', msg));
-  // });
-
-  // afterEach(async ({ page }) => {
-  //   await page.close();
-  // });
-
   test('I want see a suitable error message when I visit the agent properties page and the application fails to get the properties', async ({
     page,
   }) => {

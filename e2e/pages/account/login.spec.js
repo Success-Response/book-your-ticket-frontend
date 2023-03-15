@@ -176,7 +176,7 @@ describe('Login page', () => {
 
     await step('Then I should see an error message', async () => {
       await expect(page.getByTestId('login-error')).toHaveText(
-        'Something went wrong'
+        'You are unable to access this resource'
       );
     });
 

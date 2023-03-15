@@ -30,10 +30,7 @@ const AgentProperties = () => {
           <div>
             {error ? (
               <p data-testid="agent-properties-error">
-                {/* FIXME */}
                 {errorHandler(error, 'Properties')}
-                {/* {error?.statusText} */}
-                {/* {error} */}
               </p>
             ) : (
               <div>
