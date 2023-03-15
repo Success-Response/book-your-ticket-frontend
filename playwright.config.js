@@ -5,15 +5,13 @@ require('dotenv').config({
   path: './.env.test',
 });
 
-console.log(process.env);
-
 module.exports = defineConfig({
   // timeout per test
   timeout: 30 * 1000,
   testDir: `${__dirname}/e2e`,
   retries: 1,
   outputDir: 'test-results/',
-  // Run your local dev server before starting the tests:
+  // Run a local dev server before starting the tests
   webServer: {
     command: 'npm run dev',
     port: 3000,
