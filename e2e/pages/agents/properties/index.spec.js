@@ -12,7 +12,7 @@ const assertAgentPropertiesPage = async (page) => {
   await expect(page.getByTestId('agent-properties-page')).toBeVisible();
 };
 
-describe.only('AgentProperties page', () => {
+describe('AgentProperties page', () => {
   test('I want see a suitable error message if an agent has not listed any properties', async ({
     page,
   }) => {
