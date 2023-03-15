@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const { step, describe } = test;
 
 describe('AgentProperties page', () => {
-  test('I want see a suitable error message when I visit the agent properties page and the application fails to get the properties', async ({
+  test('I want see a suitable error message if an agent has not listed any properties', async ({
     page,
   }) => {
     const apiRoute = '**/api/agents/1/properties';
