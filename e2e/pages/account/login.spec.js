@@ -1,15 +1,22 @@
 import { test, expect } from '@playwright/test';
 
-const { step, describe } = test;
+const { step, describe, beforeEach } = test;
+
+beforeEach(async ({ page }) => {
+  await page.goto('/account/login');
+});
+
+const assertLoginPage = async (page) => {
+  await expect(page).toHaveTitle('Login');
+  await expect(page.getByTestId('login-page')).toBeVisible();
+};
 
 describe('Login page', () => {
   test('The login feature contains the correct components', async ({
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step(
@@ -41,9 +48,7 @@ describe('Login page', () => {
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step(
@@ -69,9 +74,7 @@ describe('Login page', () => {
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step(
@@ -97,9 +100,7 @@ describe('Login page', () => {
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step('And I enter a password less than 6 characters', async () => {
@@ -124,9 +125,7 @@ describe('Login page', () => {
     page,
   }) => {
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step('And I select the password field', async () => {
@@ -160,9 +159,7 @@ describe('Login page', () => {
     });
 
     await step('Given I am on the login page', async () => {
-      await page.goto('/account/login');
-      await expect(page).toHaveTitle('Login');
-      await expect(page.getByTestId('login-page')).toBeVisible();
+      await assertLoginPage(page);
     });
 
     await step('And I enter my details without being registered', async () => {
