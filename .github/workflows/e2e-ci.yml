@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true,
-      NEXT_PUBLIC_API_URL: 'http://localhost:3000/dev'
+      NEXT_PUBLIC_API_URL: http://localhost:3000/dev
 
     steps:
       - uses: actions/checkout@v3
