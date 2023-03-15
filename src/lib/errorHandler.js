@@ -1,7 +1,3 @@
-const defaultMessage = {
-  notFound: 'Resource not found',
-};
-
 // eslint-disable-next-line consistent-return
 const errorHandler = (e, message = false) => {
   let response = 'Something went wrong';
