@@ -6,12 +6,12 @@ import errorHandler from 'lib/errorHandler';
 import { loginFormValidation } from 'lib/validationSchemas';
 
 const LoginForm = () => {
-  const { setRequestParams, response } = useFetch();
-  const { loading, error, data } = response;
+  const { request, state } = useFetch();
+  const { loading, error, data } = state;
 
   const handleSubmit = async (values) => {
     if (!loading) {
-      setRequestParams('POST', '/api/auth/login', { ...values });
+      request('POST', '/api/auth/login', { ...values });
     }
   };
 

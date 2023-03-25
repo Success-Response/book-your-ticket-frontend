@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { fetchParamsValidation } from '../lib/validationSchemas';
 
-const initialResponse = {
+const initialState = {
   loading: false,
   error: false,
   message: false,
@@ -17,18 +17,18 @@ const initialRequest = {
 
 const useFetch = () => {
   const ref = useRef(true);
-  const [request, setRequest] = useState(initialRequest);
-  const [response, setResponse] = useState(initialResponse);
+  const [requestParams, setRequestParams] = useState(initialRequest);
+  const [state, setState] = useState(initialState);
 
-  const setRequestParams = (method, path, body = false) => {
-    setRequest((prev) => ({
+  const request = (method, path, body = false) => {
+    setRequestParams((prev) => ({
       ...prev,
       method,
       path,
       body: JSON.stringify(body),
     }));
 
-    setResponse((prev) => ({
+    setState((prev) => ({
       ...prev,
       loading: true,
     }));
@@ -36,13 +36,13 @@ const useFetch = () => {
 
   const sendRequest = async () => {
     try {
-      // validate the request
-      await fetchParamsValidation().validate(request, {
+      // validate the requestParams
+      await fetchParamsValidation().validate(requestParams, {
         strict: true,
       });
 
       // compile the fetch payload
-      const { method, body, headers } = request;
+      const { method, body, headers } = requestParams;
       const payload = {
         headers: {
           'Content-Type': 'application/json',
@@ -54,26 +54,26 @@ const useFetch = () => {
       if (method === 'GET') delete payload.body; // exclude body data from GET requests
 
       // make the fetch request
-      const fetchReponse = await fetch(request.path, payload);
+      const response = await fetch(requestParams.path, payload);
 
-      // if the request fails, throw the response to the catch block
-      if (fetchReponse.status !== 200) throw fetchReponse;
+      // if the request fails, throw the state to the catch block
+      if (response.status !== 200) throw response;
 
       // get body data
-      const resBody = await fetchReponse.json();
+      const resJson = await response.json();
 
-      setResponse((prev) => ({
+      setState((prev) => ({
         ...prev,
-        data: { ...resBody },
+        data: { ...resJson },
         error: false,
         loading: false,
       }));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error({ e });
-      setResponse((prev) => ({
+      setState((prev) => ({
         ...prev,
-        ...initialResponse,
+        ...initialState,
         loading: false,
         error: e,
       }));
@@ -83,7 +83,7 @@ const useFetch = () => {
   useEffect(() => {
     const abortController = new AbortController();
 
-    if (!ref.current && response.loading && request.path) {
+    if (!ref.current && state.loading && requestParams.path) {
       sendRequest();
     }
     /* ref.current ===  true on first render, set it false here 
@@ -94,9 +94,9 @@ const useFetch = () => {
       // abort request if component is unmounted
       abortController.abort();
     };
-  }, [request.path, response.loading]);
+  }, [requestParams.path, state.loading]);
 
-  return { setRequestParams, request, response };
+  return { request, state };
 };
 
 export default useFetch;

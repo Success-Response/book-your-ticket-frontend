@@ -5,15 +5,15 @@ import { useRouter } from 'next/router';
 import errorHandler from 'lib/errorHandler';
 
 const AgentProperties = () => {
-  const { setRequestParams, response } = useFetch();
-  const { loading, error, data } = response;
+  const { request, state } = useFetch();
+  const { loading, error, data } = state;
   const {
     query: { agentId },
   } = useRouter();
 
   useEffect(() => {
     if (agentId) {
-      setRequestParams('GET', `/api/agents/${agentId}/properties`);
+      request('GET', `/api/agents/${agentId}/properties`);
     }
   }, [agentId]);
 

@@ -9,21 +9,15 @@ beforeEach(() => {
 
 const renderAndInitialAssertions = () => {
   const { result } = renderHook(() => useFetch());
-  const { setRequestParams, request, response } = result.current;
-  expect(request).toStrictEqual({
-    method: false,
-    path: false,
-    body: false,
-  });
-
-  expect(response).toStrictEqual({
+  const { request, state } = result.current;
+  expect(state).toStrictEqual({
     loading: false,
     error: false,
     message: false,
     data: false,
   });
 
-  expect(typeof setRequestParams).toBe('function');
+  expect(typeof request).toBe('function');
   return result;
 };
 
@@ -39,12 +33,12 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
 
     // actions
     act(() => {
-      result.current.setRequestParams('GET', 1234);
+      result.current.request('GET', 1234);
     });
 
     // final assertions
     await waitFor(() => {
-      const { name, message } = result.current.response.error;
+      const { name, message } = result.current.state.error;
       expect(name).toBe('ValidationError');
       expect(message).toBe('The path parameter must be a string, number given');
       expect(fetchSpy).not.toHaveBeenCalled();
@@ -57,12 +51,12 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
 
     // actions
     act(() => {
-      result.current.setRequestParams(99999, '/login');
+      result.current.request(99999, '/login');
     });
 
     // final assertions
     await waitFor(() => {
-      const { name, message } = result.current.response.error;
+      const { name, message } = result.current.state.error;
       expect(name).toBe('ValidationError');
       expect(message).toBe(
         'The method parameter must be a string, number given'
@@ -77,12 +71,12 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
 
     // actions
     act(() => {
-      result.current.setRequestParams('POST', '/test');
+      result.current.request('POST', '/test');
     });
 
     // final assertions
     await waitFor(() => {
-      const { name, message } = result.current.response.error;
+      const { name, message } = result.current.state.error;
       expect(name).toBe('ValidationError');
       expect(message).toBe(
         'Please provide a body object for POST or DELETE requests'
@@ -108,12 +102,12 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
 
     // actions
     await act(async () => {
-      result.current.setRequestParams('POST', apiRoute, body);
+      result.current.request('POST', apiRoute, body);
     });
 
     // final assertions
     await waitFor(() => {
-      expect(result.current.response).toStrictEqual({
+      expect(result.current.state).toStrictEqual({
         loading: false,
         error: false,
         message: false,
@@ -143,13 +137,13 @@ describe('useFetch: a React hook to handle API requests using fetch', () => {
 
     // actions
     await act(async () => {
-      result.current.setRequestParams('GET', apiRoute);
+      result.current.request('GET', apiRoute);
     });
 
     // final assertions
     await waitFor(() => {
-      const { status, statusText } = result.current.response.error;
-      expect(result.current.response.loading).toBe(false);
+      const { status, statusText } = result.current.state.error;
+      expect(result.current.state.loading).toBe(false);
       expect(status).toBe(404);
       expect(statusText).toBe('Not Found');
       expect(fetchSpy).toHaveBeenNthCalledWith(1, apiRoute, {
